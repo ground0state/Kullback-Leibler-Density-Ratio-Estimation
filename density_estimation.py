@@ -1,4 +1,8 @@
+
 # coding: utf-8
+
+# In[6]:
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -123,15 +127,11 @@ def main():
    
     a = np.array([]) #Degree of error
     r = np.array([]) #Density ratio
-    infty = 1000
     for basis_error in basis_mtx_error:
-        if np.dot(theta, basis_error) == 0:
-            r = np.append(r, 0)
-            a = np.append(a, infty)
-        else:
-            density_ratio = np.dot(theta, basis_error)
-            r = np.append(r, density_ratio)
-            a = np.append(a, -np.log(density_ratio))
+        density_ratio = np.dot(theta, basis_error)
+        r = np.append(r, density_ratio)
+        a = np.append(a, -np.log(density_ratio))
+        
     if DEBUG:        
         print("Band width candidate:",band_width_candidate)
         print("J_h:",J_h)
