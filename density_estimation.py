@@ -1,4 +1,8 @@
+
 # coding: utf-8
+
+# In[6]:
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,7 +19,7 @@ def kernel(x, y, h):
 
 def main():
 
-    DEBUG = False
+    DEBUG = True
 
     """preparation for data"""
     normal_data = np.loadtxt("normal_data.txt",delimiter=",")
@@ -111,7 +115,8 @@ def main():
     for i in range(1, cnt+1):
         dJ_dtheta = dJ_dtheta_ini - np.sum((basis_mtx_normal.T / np.dot(basis_mtx_normal, theta)), axis=1)/(split*M_NML)
         theta = theta - size * dJ_dtheta
-        if np.min(np.dot(basis_mtx_normal, theta)) <= 0:
+        if np.min(np.dot(basis_mtx_normal, theta)) <= 0 or np.min(np.dot(basis_mtx_error, theta)) <= 0:
+            theta = theta + size * dJ_dtheta
             if DEBUG:
                 print("Density ratio estimation counter stop; i=",i)
             break
