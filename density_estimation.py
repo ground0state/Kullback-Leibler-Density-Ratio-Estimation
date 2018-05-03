@@ -1,8 +1,4 @@
-
 # coding: utf-8
-
-# In[6]:
-
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,7 +15,7 @@ def kernel(x, y, h):
 
 def main():
 
-    DEBUG = True
+    DEBUG = False
 
     """preparation for data"""
     normal_data = np.loadtxt("normal_data.txt",delimiter=",")
