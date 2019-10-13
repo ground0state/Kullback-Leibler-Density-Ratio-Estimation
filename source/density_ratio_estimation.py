@@ -83,7 +83,8 @@ if __name__ == '__main__':
             train_error_data = error_data[train_index]
             valid_error_data = error_data[valid_index]
 
-            model = DensityRatioEstimation(band_width=k)
+            model = DensityRatioEstimation(
+                band_width=k, learning_rate=0.1, num_iterations=1000)
             model.fit(train_normal_data, train_error_data)
             scores.append(model.get_score())
 
@@ -92,10 +93,15 @@ if __name__ == '__main__':
     min_k = min(ks_score, key=ks_score.get)
     print('min k:', min_k)
 
-    model = DensityRatioEstimation(band_width=min_k, learning_rate=0.001)
+    model = DensityRatioEstimation(
+        band_width=min_k, learning_rate=0.1, num_iterations=1000)
     model.fit(normal_data, error_data)
 
+    scores = model.get_score()
     pred = model.predict(normal_data, error_data)
+
+    plt.plot(scores)
+    plt.show()
 
     plt.plot(pred)
     plt.show()
