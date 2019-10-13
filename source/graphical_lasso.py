@@ -1,3 +1,6 @@
+"""
+Copyright © 2019 ground0state. All rights reserved.
+"""
 import numpy as np
 import sys
 from sklearn.preprocessing import StandardScaler

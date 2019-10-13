@@ -1,3 +1,6 @@
+"""
+Copyright © 2019 ground0state. All rights reserved.
+"""
 if __name__ == '__main__':
 
     import numpy as np
