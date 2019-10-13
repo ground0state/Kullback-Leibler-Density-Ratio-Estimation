@@ -57,18 +57,41 @@ class DensityRatioEstimation():
 
 
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+    from sklearn.model_selection import KFold
+
     normal_data = np.loadtxt("../input/normal_data.csv", delimiter=",")
     error_data = np.loadtxt("../input/error_data.csv", delimiter=",")
 
-    train_normal_data = normal_data[50:]
-    valid_normal_data = normal_data[:50]
-    train_error_data = error_data[50:]
-    valid_error_data = error_data[:50]
+    kf_iter = KFold(n_splits=3).split(normal_data)
 
-    model = DensityRatioEstimation()
-    model.fit(train_normal_data, train_error_data)
-    pred = model.predict(valid_normal_data, valid_error_data)
+    # A rule-of-thumb bandwidth estimator
+    # <https://en.wikipedia.org/wiki/Kernel_density_estimation>
+    SILVERMAN = 1.06*np.std(normal_data, axis=0)/pow(len(normal_data), 1/5)
 
-    import matplotlib.pyplot as plt
+    ks = SILVERMAN + [0.1, 0.5, 1.0]
+    scores = []
+    ks_score = {}
+    for k in ks:
+        for train_index, valid_index in kf_iter:
+            train_normal_data = normal_data[train_index]
+            valid_normal_data = normal_data[valid_index]
+            train_error_data = error_data[train_index]
+            valid_error_data = error_data[valid_index]
+
+            model = DensityRatioEstimation(band_width=k)
+            model.fit(train_normal_data, train_error_data)
+            scores.append(model.get_score())
+
+        ks_score[k] = np.mean(scores)
+
+    min_k = min(ks_score, key=ks_score.get)
+    print('min k:', min_k)
+
+    model = DensityRatioEstimation(band_width=min_k)
+    model.fit(normal_data, error_data)
+
+    pred = model.predict(normal_data, error_data)
+
     plt.plot(pred)
     plt.show()
