@@ -10,6 +10,7 @@ class DensityRatioEstimation():
         self.J = None
         self.psi = None
         self.psi_prime = None
+        self.eps = 10e-15
 
     def fit(self, X_normal, X_error):
         self.theta = np.ones(len(X_normal))
@@ -21,10 +22,12 @@ class DensityRatioEstimation():
             [self._gauss_kernel(x, X_normal) for x in X_error])
         dJ_1 = self.psi_prime.sum(axis=0) / len(X_error)
 
-        for i in range(self.num_iterations):
+        for _ in range(self.num_iterations):
             # calculate J
             r = np.dot(self.psi, self.theta)
+            r = np.maximum(r, self.eps)
             r_prime = np.dot(self.psi_prime, self.theta)
+            r_prime = np.maximum(r_prime, self.eps)
             self.J.append(np.sum(r_prime)/len(X_error) -
                           np.sum(np.log(r))/len(X_normal))
 
@@ -53,6 +56,7 @@ class DensityRatioEstimation():
         psi_prime = np.asarray([self._gauss_kernel(x, X_normal)
                                 for x in X_error])
         r_prime = np.dot(psi_prime, self.theta)
+        r_prime = np.maximum(r_prime, self.eps)
         return -np.log(r_prime)
 
 
@@ -88,7 +92,7 @@ if __name__ == '__main__':
     min_k = min(ks_score, key=ks_score.get)
     print('min k:', min_k)
 
-    model = DensityRatioEstimation(band_width=min_k)
+    model = DensityRatioEstimation(band_width=min_k, learning_rate=0.001)
     model.fit(normal_data, error_data)
 
     pred = model.predict(normal_data, error_data)
