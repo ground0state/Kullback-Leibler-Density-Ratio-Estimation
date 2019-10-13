@@ -4,12 +4,12 @@ if __name__ == '__main__':
     from sklearn.gaussian_process import GaussianProcessRegressor
     from sklearn.gaussian_process import kernels
 
-    X_train = np.loadtxt("./input/GaussianProcess_X_train.csv",
+    X_train = np.loadtxt("../input/GaussianProcess_X_train.csv",
                          delimiter=",").reshape(-1, 1)
-    y_train = np.loadtxt("./input/GaussianProcess_y_train.csv", delimiter=",")
-    X_test = np.loadtxt("./input/GaussianProcess_X_test.csv",
+    y_train = np.loadtxt("../input/GaussianProcess_y_train.csv", delimiter=",")
+    X_test = np.loadtxt("../input/GaussianProcess_X_test.csv",
                         delimiter=",").reshape(-1, 1)
-    y_test = np.loadtxt("./input/GaussianProcess_y_test.csv", delimiter=",")
+    y_test = np.loadtxt("../input/GaussianProcess_y_test.csv", delimiter=",")
 
     kernel = kernels.RBF(1.0, (1e-3, 1e3)) + \
         kernels.ConstantKernel(1.0, (1e-3, 1e3)) + kernels.WhiteKernel()

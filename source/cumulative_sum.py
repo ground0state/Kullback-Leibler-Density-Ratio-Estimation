@@ -44,8 +44,8 @@ class CUMSUM():
 
 
 if __name__ == '__main__':
-    normal_data = np.loadtxt("./input/timeseries_normal.csv", delimiter=",")
-    error_data = np.loadtxt("./input/timeseries_error.csv", delimiter=",")
+    normal_data = np.loadtxt("../input/timeseries_normal.csv", delimiter=",")
+    error_data = np.loadtxt("../input/timeseries_error.csv", delimiter=",")
 
     model = CUMSUM()
     model.fit(normal_data, threshold=3)

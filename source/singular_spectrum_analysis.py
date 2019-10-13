@@ -46,7 +46,7 @@ class singular_spectrum_analysis():
 
 
 if __name__ == '__main__':
-    error_data = np.loadtxt("./input/timeseries_error2.csv", delimiter=",")
+    error_data = np.loadtxt("../input/timeseries_error2.csv", delimiter=",")
 
     model = singular_spectrum_analysis()
     model.fit(error_data, window_size=50, trajectory_n=25,

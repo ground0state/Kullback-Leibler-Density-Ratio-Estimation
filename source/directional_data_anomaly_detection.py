@@ -16,8 +16,8 @@ class DirectionalDataAnomalyDetection():
 if __name__ == '__main__':
 
     normal_data = np.loadtxt(
-        "./input/normal_direction_data.csv", delimiter=",")
-    error_data = np.loadtxt("./input/error_direction_data.csv", delimiter=",")
+        "../input/normal_direction_data.csv", delimiter=",")
+    error_data = np.loadtxt("../input/error_direction_data.csv", delimiter=",")
 
     model = DirectionalDataAnomalyDetection()
     model.fit(normal_data)

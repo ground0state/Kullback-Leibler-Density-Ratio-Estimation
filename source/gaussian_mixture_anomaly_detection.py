@@ -2,8 +2,8 @@ if __name__ == '__main__':
     import numpy as np
     from sklearn.mixture import GaussianMixture
 
-    normal_data = np.loadtxt("./input/normal_data.csv", delimiter=",")
-    error_data = np.loadtxt("./input/error_data.csv", delimiter=",")
+    normal_data = np.loadtxt("../input/normal_data.csv", delimiter=",")
+    error_data = np.loadtxt("../input/error_data.csv", delimiter=",")
 
     class Args():
         n_components = 3

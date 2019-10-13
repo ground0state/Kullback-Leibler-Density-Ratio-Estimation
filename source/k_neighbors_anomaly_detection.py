@@ -3,7 +3,7 @@ if __name__ == '__main__':
     from sklearn.neighbors import KNeighborsClassifier
 
     error_data = np.loadtxt(
-        "./input/error_data_with_label.csv", delimiter=",")
+        "../input/error_data_with_label.csv", delimiter=",")
 
     X_train = error_data[:50, 1:]
     y_train = error_data[:50, :1].ravel()

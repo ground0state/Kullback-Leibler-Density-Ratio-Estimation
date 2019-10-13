@@ -35,7 +35,7 @@ class DensityRatioEstimation():
     def _gauss_kernel(self, x, X):
         return np.exp(-np.sum((x - X)**2, axis=1)/(2*self.band_width**2))
 
-    def get_train_objective(self):
+    def get_score(self):
         return self.J
 
     def objective(self, X_normal, X_error):
@@ -57,8 +57,8 @@ class DensityRatioEstimation():
 
 
 if __name__ == '__main__':
-    normal_data = np.loadtxt("./input/normal_data.csv", delimiter=",")
-    error_data = np.loadtxt("./input/error_data.csv", delimiter=",")
+    normal_data = np.loadtxt("../input/normal_data.csv", delimiter=",")
+    error_data = np.loadtxt("../input/error_data.csv", delimiter=",")
 
     train_normal_data = normal_data[50:]
     valid_normal_data = normal_data[:50]

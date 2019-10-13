@@ -4,8 +4,8 @@ if __name__ == '__main__':
     from sklearn.ensemble import IsolationForest
     from sklearn.preprocessing import StandardScaler
 
-    normal_data = np.loadtxt("./input/normal_data.csv", delimiter=",")
-    error_data = np.loadtxt("./input/error_data.csv", delimiter=",")
+    normal_data = np.loadtxt("../input/normal_data.csv", delimiter=",")
+    error_data = np.loadtxt("../input/error_data.csv", delimiter=",")
 
     normal_data = StandardScaler().fit_transform(normal_data)
     error_data = StandardScaler().fit_transform(error_data)

@@ -52,8 +52,8 @@ class HotelingT2():
 
 if __name__ == '__main__':
 
-    normal_data = np.loadtxt("./input/normal_data.csv", delimiter=",")
-    error_data = np.loadtxt("./input/error_data.csv", delimiter=",")
+    normal_data = np.loadtxt("../input/normal_data.csv", delimiter=",")
+    error_data = np.loadtxt("../input/error_data.csv", delimiter=",")
 
     model = HotelingT2()
     model.fit(normal_data)
