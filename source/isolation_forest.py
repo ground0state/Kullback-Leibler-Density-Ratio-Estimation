@@ -1,5 +1,5 @@
 """
-Copyright © 2019 ground0state. All rights reserved.
+Copyright (c) 2019 ground0state. All rights reserved.
 """
 if __name__ == '__main__':
 
