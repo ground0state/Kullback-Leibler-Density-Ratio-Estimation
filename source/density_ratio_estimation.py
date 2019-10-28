@@ -66,8 +66,8 @@ class KLDensityRatioEstimation():
             r = np.maximum(r, self.eps)
             r_prime = np.dot(self.psi_prime, self.theta)
             r_prime = np.maximum(r_prime, self.eps)
-            self.Js.append(np.sum(r_prime)/len(X_error) -
-                           np.sum(np.log(r))/len(X_normal))
+            J = np.sum(r_prime)/len(X_error) - np.sum(np.log(r))/len(X_normal)
+            self.Js.append(J)
 
             # calculate gradient
             dJ = dJ_1 - (self.psi / r).sum(axis=0) / len(X_normal)
@@ -79,18 +79,18 @@ class KLDensityRatioEstimation():
     def _gaussian_kernel(self, x, X):
         return np.exp(-np.sum((x - X)**2, axis=1)/(2*self.band_width**2))
 
-    def get_running_score(self):
+    def get_running_loss(self):
         """Kullback-Leibler density ratio estimation.
 
         Returns
         -------
         Js : array-like, shape (num_iterations,)
-            scores of objective function in training.
+            losses of objective function in training.
         """
         return self.Js
 
     def score(self, X_normal, X_error):
-        """Calculate score of objective function.
+        """Calculate anomaly score according to the given test data.
 
         Parameters
         ----------
@@ -104,20 +104,8 @@ class KLDensityRatioEstimation():
 
         Returns
         -------
-        self : object
-        """
-        psi = np.asarray([self._gaussian_kernel(x, X_normal)
-                          for x in X_normal])
-        psi_prime = np.asarray([self._gaussian_kernel(x, X_normal)
-                                for x in X_error])
-        r = np.dot(psi, self.theta)
-        r_prime = np.dot(psi_prime, self.theta)
-        J = np.sum(r_prime)/len(X_error) - np.sum(np.log(r))/len(X_normal)
-        return J
-
-    def predict(self, X_normal, X_error):
-        """Calculate anomaly score on samples in X_error.
-
+        anomaly_score : array-like, shape (n_samples,)
+            Anomaly score.
         """
 
         psi_prime = np.asarray([self._gaussian_kernel(x, X_normal)
@@ -141,8 +129,8 @@ if __name__ == '__main__':
     SILVERMAN = 1.06*np.std(normal_data, axis=0)/pow(len(normal_data), 1/5)
 
     ks = SILVERMAN + [0.1, 0.5, 1.0]
-    scores = []
-    ks_score = {}
+    losses = []
+    ks_loss = {}
     for k in ks:
         for train_index, valid_index in kf_iter:
             train_normal_data = normal_data[train_index]
@@ -153,21 +141,21 @@ if __name__ == '__main__':
             model = KLDensityRatioEstimation(
                 band_width=k, learning_rate=0.1, num_iterations=1000)
             model.fit(train_normal_data, train_error_data)
-            scores.append(model.get_running_score())
+            losses.append(model.get_running_loss()[-1])
 
-        ks_score[k] = np.mean(scores)
+        ks_loss[k] = np.mean(losses)
 
-    min_k = min(ks_score, key=ks_score.get)
+    min_k = min(ks_loss, key=ks_loss.get)
     print('min k:', min_k)
 
     model = KLDensityRatioEstimation(
         band_width=min_k, learning_rate=0.1, num_iterations=1000)
     model.fit(normal_data, error_data)
 
-    scores = model.get_running_score()
-    pred = model.predict(normal_data, error_data)
+    losses = model.get_running_loss()
+    pred = model.score(normal_data, error_data)
 
-    plt.plot(scores)
+    plt.plot(losses)
     plt.show()
 
     plt.plot(pred)

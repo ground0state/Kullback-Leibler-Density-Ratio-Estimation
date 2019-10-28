@@ -1,14 +1,43 @@
 """
 Copyright (c) 2019 ground0state. All rights reserved.
+License: MIT License
 """
 import numpy as np
 
 
-class singular_spectrum_analysis():
-    def __init__(self):
-        self.score = None
+class SSA():
+    """Singular spectrum analysis for anomaly detection"""
 
-    def fit(self, y, window_size, trajectory_n, trajectory_pattern, test_n, test_pattern, lag=0):
+    def __init__(self):
+        self.__score = None
+
+    def fit(self, y, window_size=50, trajectory_n=25, trajectory_pattern=3, test_n=25, test_pattern=2, lag=25):
+        """Fit the DensityRatioEstimation model according to the given data.
+
+        Parameters
+        ----------
+        y : array-like, shape (n_samples,)
+            measured vectors contain error, where n_samples is the number of samples.
+
+        trajectory_n: int
+            Number of row of trajectory matrix.
+
+        trajectory_pattern: int
+            Number of trajectory matrix's left singular vectors selected as principal subspace.
+
+        test_n: int
+            Number of row of test matrix.
+
+        test_pattern: int
+            Number of test matrix's left singular vectors selected as principal subspace.
+
+        lag: int
+            Lag between trajectory matrix and test matrix.
+
+        Returns
+        -------
+        self : object
+        """
         assert window_size < len(y) + 1
         assert trajectory_pattern <= window_size
         assert test_pattern <= window_size
@@ -42,19 +71,28 @@ class singular_spectrum_analysis():
                 a = 0
             anomaly_score.append(a)
 
-        self.score = np.array(anomaly_score)
+        self.__score = np.array(anomaly_score)
 
-    def get_score(self):
-        return self.score
+        return self
+
+    def score(self):
+        """Calculate anomaly score for each feature according to the given data.
+
+         Returns
+         -------
+         score : array-like, shape (n_samples,)
+            Anomaly score.
+         """
+        return self.__score
 
 
 if __name__ == '__main__':
     error_data = np.loadtxt("../input/timeseries_error2.csv", delimiter=",")
 
-    model = singular_spectrum_analysis()
+    model = SSA()
     model.fit(error_data, window_size=50, trajectory_n=25,
               trajectory_pattern=3, test_n=25, test_pattern=2, lag=25)
-    pred = model.get_score()
+    pred = model.score()
 
     import matplotlib.pyplot as plt
     plt.plot(error_data)

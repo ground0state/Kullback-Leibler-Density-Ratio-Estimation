@@ -1,5 +1,6 @@
 """
 Copyright (c) 2019 ground0state. All rights reserved.
+License: MIT License
 """
 if __name__ == '__main__':
     import numpy as np

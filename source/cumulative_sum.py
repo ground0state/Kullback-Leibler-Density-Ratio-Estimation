@@ -1,10 +1,14 @@
 """
 Copyright (c) 2019 ground0state. All rights reserved.
+License: MIT License
 """
 import numpy as np
 
 
-class CUMSUM():
+class CAD():
+    """CUSUM Anomaly Detection.
+    """
+
     def __init__(self):
         self.normal_mean = None
         self.normal_std = None
@@ -13,6 +17,21 @@ class CUMSUM():
         self.uppper = None
 
     def fit(self, y, threshold):
+        """Fit the model according to the given train data.
+
+        Parameters
+        ----------
+        y : array-like, shape (n_samples, )
+            Normal measured vectors, where n_samples is the number of samples.
+
+        threshold: float
+            Size of the shift that is to be detected.
+
+        Returns
+        -------
+        self : object
+        """
+
         self.normal_mean = np.mean(y)
         self.normal_std = np.std(y)
         self.error_mean = threshold
@@ -23,7 +42,24 @@ class CUMSUM():
         else:
             self.uppper = False
 
-    def predict(self, y_test, cumsum_on=True):
+        return self
+
+    def score(self, y_test, cumsum_on=True):
+        """Calculate anomaly score according to the given test data.
+
+        Parameters
+        ----------
+        y_test : array-like, shape (n_samples,)
+            Error measured vectors, where n_samples is the number of samples.
+
+        cumsum_on: bool
+            If True, return cumsumed anomaly score. If False, return pure anomaly score. 
+
+        Returns
+        -------
+        anomaly_score : array-like, shape (n_samples,)
+            Anomaly score.
+        """
 
         if self.uppper:
             anomaly_socre = self.nu * \
@@ -47,12 +83,14 @@ class CUMSUM():
 
 
 if __name__ == '__main__':
-    normal_data = np.loadtxt("../input/timeseries_normal.csv", delimiter=",")
-    error_data = np.loadtxt("../input/timeseries_error.csv", delimiter=",")
+    normal_data = np.loadtxt(
+        "../input/timeseries_normal.csv", delimiter=",").reshape(-1, 1)
+    error_data = np.loadtxt(
+        "../input/timeseries_error.csv", delimiter=",").reshape(-1, 1)
 
-    model = CUMSUM()
+    model = CAD()
     model.fit(normal_data, threshold=3)
-    pred = model.predict(error_data)
+    pred = model.score(error_data, cumsum_on=True)
 
     import matplotlib.pyplot as plt
     plt.plot(pred)
